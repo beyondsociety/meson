@@ -226,6 +226,7 @@ class BaseOption(T.Generic[options._T, options._U]):
         return self.opt_type(name.name, self.description, **keywords)
 
 BASE_OPTIONS: T.Mapping[OptionKey, BaseOption] = {
+    OptionKey('b_allow-shlib'): BaseOption(options.UserBooleanOption, 'Use -Wl,--allow-shlib-undefined when linking', True),
     OptionKey('b_pch'): BaseOption(options.UserBooleanOption, 'Use precompiled headers', True),
     OptionKey('b_lto'): BaseOption(options.UserBooleanOption, 'Use link time optimization', False),
     OptionKey('b_lto_threads'): BaseOption(options.UserIntegerOption, 'Use multiple threads for Link Time Optimization', (None, None, 0)),
@@ -390,7 +391,10 @@ def get_base_link_args(options: 'KeyedOptionDictType', linker: 'Compiler',
                 option_enabled(linker.base_options, options, OptionKey('b_lundef'))):
             args.extend(linker.no_undefined_link_args())
         else:
-            args.extend(linker.get_allow_undefined_link_args())
+            # Move this to its own if/else block, in the meantime comment out arge.extend line to remove the
+            # --allow-shlib-undefined option when linking for crosscompiler
+            allow_shlib = option_enabled(linker.base_options, options, OptionKey('b_allow-shlib'))
+            #args.extend(linker.get_allow_undefined_link_args())
 
     try:
         try:
