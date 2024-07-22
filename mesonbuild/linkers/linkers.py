@@ -620,6 +620,11 @@ class GnuLikeDynamicLinkerMixin(DynamicLinkerBase):
     def get_allow_undefined_args(self) -> T.List[str]:
         return self._apply_prefix('--allow-shlib-undefined')
 
+    # Not sure if this code is needed or not, will leave diabled for now
+    #def get_allow_undefined_link_args(self) -> T.List[str]:
+        #return self._apply_prefix('--allow-shlib-undefined')
+    #   return []
+
     def get_lto_args(self) -> T.List[str]:
         return ['-flto']
 
